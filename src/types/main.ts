@@ -8,6 +8,10 @@ export interface ContextType {
   setAccount: Dispatch<
     SetStateAction<AccountProps | null>
   >;
+  pageLoading: boolean;
+  setPageLoading: Dispatch<
+    SetStateAction<boolean>
+  >;
 }
 export interface AccountProps {
   _id: string;
@@ -24,5 +28,12 @@ export interface AxsiosResponseT {
 }
 export interface AxiosType
   extends AxsiosResponseT {
+  accounts(accounts: any): unknown;
   data: AccountProps[] | AccountProps;
+}
+
+export interface MenuItemType {
+  id: string;
+  title: string;
+  path: string;
 }

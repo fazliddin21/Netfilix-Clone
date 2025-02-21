@@ -24,6 +24,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 
+// -------------------------------------------Imports --------------------------------------------------------------
 const ProfileAcaunt = () => {
   let [isDelete, setIsDelete] =
     useState<boolean>(false);
@@ -31,25 +32,28 @@ const ProfileAcaunt = () => {
   let [isAuth, setIsAuth] = useState<
     "login" | "create"
   >("create");
-
   let [accounts, setAccounts] = useState<
     AccountProps[]
   >([]);
   const [isLoading, setIsLoading] =
-    useState<boolean>(true); // Loading holati qo‘shildi
-
+    useState<boolean>(true);
+  let [curruntAcaunt, setCurruntAcaunt] =
+    React.useState<AccountProps | null>(null);
+  // [------------------------------------------------------]
   const { data: session }: any = useSession();
 
   useEffect(() => {
-    let getAllAccount = async () => {
-      setIsLoading(true); // Ma'lumot yuklanayotganini bildiradi
+    if (!session?.user?.uid) return;
+    let isMounted = true;
 
+    const getAllAccount = async () => {
+      setIsLoading(true);
       try {
         const { data } =
           await axios.get<AxiosType>(
-            `/api/account?uid=${session?.user?.uid}`
+            `/api/account?uid=${session.user.uid}`
           );
-        if (data.success) {
+        if (data.success && isMounted) {
           setAccounts(
             data.data as AccountProps[]
           );
@@ -62,14 +66,18 @@ const ProfileAcaunt = () => {
             "Something went wrong, try again later",
         });
       } finally {
-        setIsLoading(false); // Ma'lumot kelgandan keyin loading tugaydi
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
-    if (session?.user?.uid) {
-      getAllAccount();
-    }
-  }, [session]);
+    getAllAccount();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [session?.user?.uid]);
 
   let onDelete = async (id: string) => {
     try {
@@ -106,6 +114,7 @@ const ProfileAcaunt = () => {
       });
     }
   };
+
   return (
     <div className="min-h-screen flex justify-center flex-col items-center relative">
       <div className="flex flex-col items-center justify-center">
@@ -113,11 +122,20 @@ const ProfileAcaunt = () => {
           Who's watching?
         </h2>
 
-        {/* Agar hali ma'lumot yuklanayotgan bo‘lsa, loader ko‘rsatamiz */}
         {isLoading ? (
-          <p className="text-white  text-xl font-bold">
-            Loading...
-          </p>
+          <ul className="flex p-0 my-12 gap-6">
+            {[1, 2, 3, 4].map((item) => (
+              <li
+                key={item}
+                className="max-w-[1200px] w-[155px] min-w-[200px] flex flex-col items-center gap-3"
+              >
+                <div className="relative">
+                  <div className="w-[155px] h-[155px] bg-gray-700 rounded animate-pulse"></div>
+                </div>
+                <div className="w-24 h-6 bg-gray-700 animate-pulse rounded"></div>
+              </li>
+            ))}
+          </ul>
         ) : (
           <ul className="flex p-0 my-12">
             {accounts?.map((item) => (
@@ -127,6 +145,7 @@ const ProfileAcaunt = () => {
                   if (!isDelete) return;
                   setOpen(true);
                   setIsAuth("login");
+                  setCurruntAcaunt(item);
                 }}
                 className="max-w-[1200px] w-[155px] cursor-pointer flex flex-col items-center gap-3 min-w-[200px]"
               >
@@ -204,7 +223,11 @@ const ProfileAcaunt = () => {
                 accaounts={accounts}
               />
             )}
-            {isAuth === "login" && <Loginform />}
+            {isAuth === "login" && (
+              <Loginform
+                curruntAcaunt={curruntAcaunt}
+              />
+            )}
           </DialogContent>
         </Dialog>
       </div>

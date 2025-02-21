@@ -7,6 +7,7 @@ import {
 import {
   createContext,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -17,10 +18,24 @@ const GlobalContext = ({
 }: ChildProps) => {
   const [account, setAccount] =
     useState<AccountProps | null>(null);
+  let [pageLoading, setPageLoading] =
+    useState<boolean>(true);
+  useEffect(() => {
+    setAccount(
+      JSON.parse(
+        sessionStorage.getItem("account")!
+      )
+    );
+  }, []);
 
   return (
     <Context.Provider
-      value={{ account, setAccount }}
+      value={{
+        account,
+        setAccount,
+        pageLoading,
+        setPageLoading,
+      }}
     >
       {children}
     </Context.Provider>
