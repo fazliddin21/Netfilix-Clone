@@ -12,6 +12,7 @@ import { useGlobalContext } from "@/context/context";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 import SearchBar from "../search/search";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   // [----------------------------------------Hook bo'limlari---------------------------------------------------------------------]
@@ -20,6 +21,8 @@ const Navbar = () => {
 
   let [openSearch, setOpenSearch] =
     React.useState(false);
+
+  const router = useRouter();
   // [---------------------------------Funsikya bolimlari-------------------------------------------------------------]
   let LogOut = () => {
     sessionStorage.removeItem("account");
@@ -45,6 +48,9 @@ const Navbar = () => {
                 (item: MenuItemType) => {
                   return (
                     <li
+                      onClick={() => {
+                        router.push(item.path);
+                      }}
                       key={item.id}
                       className=" cursor-pointer text-[16px] font-light text-[#e5e5e5] transition duration-[.4] hover:text-[#b3b3b3]"
                     >

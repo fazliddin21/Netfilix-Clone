@@ -24,7 +24,7 @@ const MovieItem = ({ moviesRun }: Props) => {
         ease: [0, 0.71, 0.2, 1.01],
       }}
     >
-      <div className="relative h-28 min-w-[180px] cursor-pointer md:min-w-[260px] tranform transition duration-500 hover:scale-110 hover:z-[999]">
+      <div className="cardWrapper relative h-28 min-w-[180px] cursor-pointer md:min-w-[260px] tranform transition duration-500 hover:scale-110 hover:z-[999]">
         <Image
           src={`${
             process.env.NEXT_PUBLIC_TMDB_IMAGE_URL
@@ -36,7 +36,7 @@ const MovieItem = ({ moviesRun }: Props) => {
           fill
           className="rounded sm object-cover md:rounded hover:rounded-sm "
         />
-        <div className="space-x-3 hidden absolute p-2 bottom-0">
+        <div className="buttunWraper space-x-3 hidden absolute p-2 bottom-0">
           <Button className="cursor-pointer border flex p-2 items-center gap-x-2 rounded-full  text-sm font-semibold transition hover:opacity-90 border-white bg-black opacity-75 text-black">
             {moviesRun.addedToFavorites ? (
               <CheckIcon

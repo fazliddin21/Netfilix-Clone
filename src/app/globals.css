@@ -73,11 +73,11 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600;
   }
 }
-/* !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600; */
 
+/* !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600; */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -111,4 +111,14 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.cardWrapper:hover {
+  background-color: black;
+}
+.cardWrapper:hover .buttunWraper {
+  display: flex;
+  z-index: 2;
+  width: 100%;
+  justify-content: center;
 }

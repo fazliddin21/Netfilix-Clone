@@ -37,6 +37,7 @@ const Banner = ({ movies }: Prpos) => {
           objectFit="cover"
         />
         <div className="absolute w-full h-56 bg-gradient-to-t from-white to-transparent bottom-0 z-20 "></div>
+        <div className="absolute w-full h-full bg-gradient-to-r from-slate-800 to-transparent bottom-0 z-20 "></div>
       </div>
       <h1 className="text-2xl text-green-600 md:text-4xl lg:text-7xl font-bold">
         {randomMovie?.title ||
