@@ -76,6 +76,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+/* !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600; */
 
 .visually-hidden {
   position: absolute;
