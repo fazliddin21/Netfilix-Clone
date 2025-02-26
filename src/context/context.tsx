@@ -3,6 +3,7 @@ import {
   AccountProps,
   ChildProps,
   ContextType,
+  MovieProps,
 } from "@/types/main";
 import {
   createContext,
@@ -28,13 +29,22 @@ const GlobalContext = ({
     );
   }, []);
 
+  let [open, setOpen] = useState(false);
+
+  let [movie, setMovie] =
+    useState<MovieProps | null>(null);
+
   return (
     <Context.Provider
       value={{
+        movie,
+        setMovie,
         account,
         setAccount,
         pageLoading,
         setPageLoading,
+        open,
+        setOpen,
       }}
     >
       {children}

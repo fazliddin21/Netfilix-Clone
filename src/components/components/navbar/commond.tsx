@@ -14,7 +14,7 @@ const Common = ({ moviesData }: Props) => {
       <div className="relative pl-4 pb-24 lg:space-y-24">
         <Banner
           movies={
-            moviesData && moviesData[0]?.data
+            moviesData &&   moviesData[0]?.data
           }
         />
 

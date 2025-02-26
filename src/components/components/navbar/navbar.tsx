@@ -13,10 +13,11 @@ import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 import SearchBar from "../search/search";
 import { useRouter } from "next/navigation";
+import MoviePopup from "../cart/movie-popap";
 
 const Navbar = () => {
   // [----------------------------------------Hook bo'limlari---------------------------------------------------------------------]
-  let { account, setAccount } =
+  let { account, setAccount, setPageLoading } =
     useGlobalContext();
 
   let [openSearch, setOpenSearch] =
@@ -50,6 +51,7 @@ const Navbar = () => {
                     <li
                       onClick={() => {
                         router.push(item.path);
+                        setPageLoading(true);
                       }}
                       key={item.id}
                       className=" cursor-pointer text-[16px] font-light text-[#e5e5e5] transition duration-[.4] hover:text-[#b3b3b3]"
@@ -62,6 +64,8 @@ const Navbar = () => {
             </ul>
           </nav>
         </div>
+
+        <MoviePopup />
         <div className="flex items-center gap-2">
           {openSearch ? (
             <SearchBar

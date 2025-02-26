@@ -20,7 +20,6 @@ const Banner = ({ movies }: Prpos) => {
       ];
     setRandomMovie(movie);
   }, []);
-  console.log(randomMovie);
 
   return (
     <div className="flex flex-col  space-y-2 py-16 md:space-y-4 lg:justify-end lg:h-[65vh] lg:pb-12 lg:pl-24">
