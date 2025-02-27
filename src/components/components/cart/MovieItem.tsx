@@ -1,6 +1,6 @@
 "use client";
 import { MovieProps } from "@/types/main";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -10,15 +10,17 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { useGlobalContext } from "@/context/context";
+import { cn } from "@/lib/utils";
 
 interface Props {
   moviesRun: MovieProps;
 }
 const MovieItem = ({ moviesRun }: Props) => {
   let { setMovie, setOpen } = useGlobalContext();
-
+  let [isloading, setIsLoading] =
+    useState<boolean>(false);
   const onOpenPopup = () => {
-    setMovie(moviesRun)
+    setMovie(moviesRun);
     setOpen(true);
   };
   return (
@@ -42,9 +44,18 @@ const MovieItem = ({ moviesRun }: Props) => {
           alt="movie"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="rounded sm object-cover md:rounded hover:rounded-sm "
+          className={cn(
+            "rounded sm object-cover md:rounded hover:rounded-sm",
+            isloading
+              ? "scale-110 blur-2xl grayscale"
+              : "scale-100 blur-0 grayscale-0"
+          )}
+          onLoadingComplete={() =>
+            setIsLoading(false)
+          }
           onClick={onOpenPopup}
         />
+
         <div className="buttunWraper space-x-3 hidden absolute p-2 bottom-[20px]">
           <Button className="cursor-pointer border flex w-{50px} items-center gap-x-2 rounded-full  text-sm font-semibold transition hover: border-white bg-black opacity-75 text-black">
             {moviesRun.addedToFavorites ? (

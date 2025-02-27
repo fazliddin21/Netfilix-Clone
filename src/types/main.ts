@@ -1,5 +1,6 @@
 import {
   Dispatch,
+  Key,
   ReactNode,
   SetStateAction,
 } from "react";
@@ -44,6 +45,9 @@ export interface MenuItemType {
 }
 
 export interface MovieDataProps {
+  id: Key | null | undefined;
+  poster_path: null;
+  backdrop_path: null;
   title: string;
   data: MovieProps[];
 }
