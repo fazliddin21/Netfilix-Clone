@@ -116,3 +116,12 @@ export interface VideoDetail {
   size: number;
   type: string;
 }
+
+export interface Favoritetype {
+  uid: string,
+  accountId: string,
+  backdrop_path: string,
+  poster_path: string,
+  movieId: string,
+  type: string
+}
