@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useGlobalContext } from "@/context/context";
 import { cn } from "@/lib/utils";
+import CustumImg from "../custum-img";
 
 interface Props {
   moviesRun: MovieProps;
@@ -34,18 +35,13 @@ const MovieItem = ({ moviesRun }: Props) => {
       }}
     >
       <div className="cardWrapper relative h-[200px] min-w-[180px] cursor-pointer md:min-w-[260px] tranform transition duration-500 hover:scale-110 hover:z-[999]">
-        <Image
-          src={`${
-            process.env.NEXT_PUBLIC_TMDB_IMAGE_URL
-          }/${
-            moviesRun.backdrop_path ||
-            moviesRun.poster_path
-          }`}
+        {/* <Image
+          src={}
           alt="movie"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className={cn(
-            "rounded sm object-cover md:rounded hover:rounded-sm",
+            "",
             isloading
               ? "scale-110 blur-2xl grayscale"
               : "scale-100 blur-0 grayscale-0"
@@ -54,8 +50,18 @@ const MovieItem = ({ moviesRun }: Props) => {
             setIsLoading(false)
           }
           onClick={onOpenPopup}
+        /> */}
+        <CustumImg
+          onClick={onOpenPopup}
+          image={`${
+            process.env.NEXT_PUBLIC_TMDB_IMAGE_URL
+          }/${
+            moviesRun.backdrop_path ||
+            moviesRun.poster_path
+          }`}
+          alt="movie"
+          className="rounded sm object-cover md:rounded hover:rounded-sm"
         />
-
         <div className="buttunWraper space-x-3 hidden absolute p-2 bottom-[20px]">
           <Button className="cursor-pointer border flex w-{50px} items-center gap-x-2 rounded-full  text-sm font-semibold transition hover: border-white bg-black opacity-75 text-black">
             {moviesRun.addedToFavorites ? (

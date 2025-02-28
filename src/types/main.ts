@@ -46,8 +46,8 @@ export interface MenuItemType {
 
 export interface MovieDataProps {
   id: Key | null | undefined;
-  poster_path: null;
-  backdrop_path: null;
+  poster_path: string | null;
+  backdrop_path: string | null;
   title: string;
   data: MovieProps[];
 }

@@ -33,7 +33,7 @@ const Banner = ({ movies }: Prpos) => {
           }`}
           alt="Banner"
           fill
-          objectFit="cover"
+          style={{ objectFit: "cover" }}
         />
         <div className="absolute w-full h-56 bg-gradient-to-t from-white to-transparent bottom-0 z-20 "></div>
         <div className="absolute w-full h-full bg-gradient-to-r from-slate-800 to-transparent bottom-0 z-20 "></div>

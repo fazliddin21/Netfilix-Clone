@@ -43,21 +43,27 @@ const Home = () => {
           getTopMovies("movie"),
           getPopulerMovies("movie"),
         ]);
-        const tvSHows: MovieDataProps[] = [
+        const tvShows: MovieDataProps[] = [
           {
             title: "Trend Tv Shows",
             data: trendTv,
           },
-          {
-            title: "Top Tv Shows",
-            data: topTv,
-          },
+          { title: "Top Tv Shows", data: topTv },
           {
             title: "Popular Tv Shows",
             data: populerTv,
           },
-        ].map((item) => ({
-          ...item,
+        ].map((item, index) => ({
+          id: index.toString(),
+          title: item.title,
+          poster_path:
+            item.data.length > 0
+              ? item.data[0].poster_path
+              : null,
+          backdrop_path:
+            item.data.length > 0
+              ? item.data[0].backdrop_path
+              : null,
           data: item.data.map(
             (movie: MovieProps) => ({
               ...movie,
@@ -67,7 +73,7 @@ const Home = () => {
           ),
         }));
 
-        const MovieSHows: MovieDataProps[] = [
+        const movieShows: MovieDataProps[] = [
           {
             title: "Trend Movies Shows",
             data: trendMovie,
@@ -78,10 +84,19 @@ const Home = () => {
           },
           {
             title: "Popular Movies Shows",
-            data: topMovie,
-          },
-        ].map((item) => ({
-          ...item,
+            data: populetMovie,
+          }, // To'g'ri versiya
+        ].map((item, index) => ({
+          id: (index + tvShows.length).toString(), // Id sifatida string ishlatildi
+          title: item.title,
+          poster_path:
+            item.data.length > 0
+              ? item.data[0].poster_path
+              : null,
+          backdrop_path:
+            item.data.length > 0
+              ? item.data[0].backdrop_path
+              : null,
           data: item.data.map(
             (movie: MovieProps) => ({
               ...movie,
@@ -92,8 +107,8 @@ const Home = () => {
         }));
 
         const AllMovies = [
-          ...tvSHows,
-          ...MovieSHows,
+          ...tvShows,
+          ...movieShows,
         ];
         setMoviesData(AllMovies);
       } catch (error) {

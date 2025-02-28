@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { StarRating } from "@/components/ui/star-rating";
 import { useGlobalContext } from "@/context/context";
@@ -18,6 +19,8 @@ import React, {
 } from "react";
 import MovieItem from "./MovieItem";
 import ReactPlayer from "react-player";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MoviePopup = () => {
   let { open, setOpen, movie } =
@@ -32,9 +35,12 @@ const MoviePopup = () => {
 
   let [playMovie, setPlayMovie] =
     useState<string>("");
+
+  let [isLoading, setLoading] = useState(false);
   useEffect(() => {
     const getDetailMovie = async () => {
       try {
+        setLoading(true);
         const extrackedDetail =
           await getMovieDetail(
             movie?.type,
@@ -83,10 +89,13 @@ const MoviePopup = () => {
             extrackedDetail?.data?.videos
               ?.results[findIndexOFClip]?.key;
         } else {
-          null;
+          key = "";
         }
         setPlayMovie(key);
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
     };
 
     if (movie !== null) {
@@ -97,78 +106,115 @@ const MoviePopup = () => {
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-6xl max-h-[90vh]  overflow-y-auto !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600">
-          <div className="relative pt-[56.25%]">
-            <ReactPlayer
-              url={`https://www.youtube.com/watch?v=${playMovie}`}
-              width={"100%"}
-              height={"100%"}
-              style={{
-                position: "absolute",
-                top: "0",
-                left: "0",
-              }}
-              playing
-              controls
-            />
-          </div>
-          <div className="flex items-center flex-col space-y-4">
-            <h1 className="text-2xl text-green-600 md:text-4xl lg:text-4xl font-bold">
-              {movie?.title ||
-                movie?.name ||
-                movie?.original_name}
-            </h1>
-            <p className=" text-shadow-md text-sm text-slate-500">
-              {movie?.overview}
-            </p>
-            <div className="flex items-center space-x-2">
-              <StarRating
-                initialRating={
-                  movie?.vote_average
-                }
-                readonly
-                totalStars={10}
-              />
-              <p className="text-[#e5b109]">
-                ({movie?.vote_count})
-              </p>
-              <div className="text-green-400  font-semibold flex gap-2">
-                <span className="text-green-400 font-semibold">
-                  {detail?.release_date
-                    ? detail.release_date.split(
-                        "-"
-                      )[0]
-                    : "2024"}
-                </span>
-                <div className="inline-flex text-green-400 font-semibold border-2 border-white/40  rounded px-2">
-                  HD
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-black p-4 rounded shadow-2xl">
-            <h2 className="mt-2 mb-6 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition-colors duration-200 hover:text-white md:text-2xl">
-              More Like This
-            </h2>
-            <div className="grid grid-cols-3 gap-3 items-center scrollbar-hide md:p-2">
-              {getTrailer?.length &&
-                getTrailer
-                  .filter(
-                    (item) =>
-                      item.backdrop_path !==
-                        null &&
-                      item.poster_path !== null
-                  )
-                  .map((item) => {
+        <DialogTitle className="visually-hidden">
+          {movie?.title ||
+            movie?.name ||
+            movie?.original_name}
+        </DialogTitle>
+
+        <DialogDescription className="visually-hidden">
+          {movie?.overview}
+        </DialogDescription>
+
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600">
+          {isLoading ? (
+            <>
+              <Skeleton className="w-full pt-[56.25%]" />
+              <Skeleton className="w-1/2 h-8" />
+              <Skeleton className="w-full h-4" />
+              <Skeleton className="w-full h-4" />
+              <Skeleton className="w-full h-4" />
+
+              <div className="bg-black p-4 rounded-md shadow-2xl">
+                <Skeleton className="w-1/2 h-4" />
+                <div className="grid grid-cols-3 gap-3 items-center scrollbar-hide md:p-2">
+                  {[
+                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                    11, 12,
+                  ].map((item) => {
                     return (
-                      <MovieItem
-                        key={item.id}
-                        moviesRun={item}
-                      />
+                      <Skeleton className="w-full h-[150px]" />
                     );
                   })}
-            </div>
-          </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="relative pt-[56.25%]">
+                <ReactPlayer
+                  url={`https://www.youtube.com/watch?v=${playMovie}`}
+                  width={"100%"}
+                  height={"100%"}
+                  style={{
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                  }}
+                  playing
+                  controls
+                />
+              </div>
+              <div className="flex items-center flex-col space-y-4">
+                <h1 className="text-2xl text-green-600 md:text-4xl lg:text-4xl font-bold">
+                  {movie?.title ||
+                    movie?.name ||
+                    movie?.original_name}
+                </h1>
+                <p className=" text-shadow-md text-sm text-slate-500">
+                  {movie?.overview}
+                </p>
+                <div className="flex items-center space-x-2">
+                  <StarRating
+                    initialRating={
+                      movie?.vote_average
+                    }
+                    readonly
+                    totalStars={10}
+                  />
+                  <p className="text-[#e5b109]">
+                    ({movie?.vote_count})
+                  </p>
+                  <div className="text-green-400 font-semibold flex gap-2">
+                    <span className="text-green-400 font-semibold">
+                      {detail?.release_date
+                        ? detail.release_date.split(
+                            "-"
+                          )[0]
+                        : "2024"}
+                    </span>
+                    <div className="inline-flex text-green-400 font-semibold border-2 border-white/40 rounded px-2">
+                      HD
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-black p-4 rounded shadow-2xl">
+                <h2 className="mt-2 mb-6 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition-colors duration-200 hover:text-white md:text-2xl">
+                  More Like This
+                </h2>
+                <div className="grid grid-cols-3 gap-3 items-center scrollbar-hide md:p-2">
+                  {getTrailer?.length &&
+                    getTrailer
+                      .filter(
+                        (item) =>
+                          item.backdrop_path !==
+                            null &&
+                          item.poster_path !==
+                            null
+                      )
+                      .map((item) => {
+                        return (
+                          <MovieItem
+                            key={item.id}
+                            moviesRun={item}
+                          />
+                        );
+                      })}
+                </div>
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>
