@@ -8,10 +8,12 @@ import { useEffect, useState } from "react";
 import Common from "@/components/components/navbar/commond";
 import {
   getDateMovies,
+  getFavorites,
   getPopulerMovies,
   getTopMovies,
 } from "@/lib/tmbd-api";
 import {
+  Favoritetype,
   MovieDataProps,
   MovieProps,
 } from "@/types/main";
@@ -23,7 +25,7 @@ const Home = () => {
 
   const { account, pageLoading, setPageLoading } =
     useGlobalContext();
-  const { data: session, status } = useSession();
+  const { data: session }: any = useSession();
 
   useEffect(() => {
     const getAllMovoies = async () => {
@@ -35,6 +37,7 @@ const Home = () => {
           trendMovie,
           topMovie,
           populetMovie,
+          favorites,
         ] = await Promise.all([
           getDateMovies("tv"),
           getTopMovies("tv"),
@@ -42,7 +45,13 @@ const Home = () => {
           getDateMovies("movie"),
           getTopMovies("movie"),
           getPopulerMovies("movie"),
+          getFavorites(
+            session?.user?.uid,
+            account?._id
+          ),
         ]);
+        console.log(favorites);
+
         const tvShows: MovieDataProps[] = [
           {
             title: "Trend Tv Shows",
@@ -68,7 +77,14 @@ const Home = () => {
             (movie: MovieProps) => ({
               ...movie,
               type: "tv",
-              addedToFavorites: false,
+              addedToFavorites: favorites.length
+                ? favorites
+                    .map(
+                      (item: Favoritetype) =>
+                        item.movieId
+                    )
+                    .indexOf(movie.id)
+                : false,
             })
           ),
         }));
@@ -101,7 +117,14 @@ const Home = () => {
             (movie: MovieProps) => ({
               ...movie,
               type: "movie",
-              addedToFavorites: false,
+              addedToFavorites: favorites.length
+                ? favorites
+                    .map(
+                      (item: Favoritetype) =>
+                        item.movieId
+                    )
+                    .indexOf(movie.id)
+                : false,
             })
           ),
         }));
@@ -118,7 +141,7 @@ const Home = () => {
     };
 
     getAllMovoies();
-  }, []);
+  }, [session]);
   if (session === null) return <Login />;
   if (pageLoading) {
     return <Loader />;

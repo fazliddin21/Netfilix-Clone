@@ -1,14 +1,13 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const favoriteScheme = new mongoose.Schema({
+const favouriteSchema = new mongoose.Schema({
     uid: String,
     accountId: String,
     backdrop_path: String,
     poster_path: String,
     movieId: String,
     type: String,
-}, { timestamps: true });
+}, { timestamps: true })
 
-
-const Favorite = mongoose.models.Favorite || mongoose.model("Favorite", favoriteScheme);
-export default Favorite
+const Favourite = mongoose.models.Favourite || mongoose.model('Favourite', favouriteSchema);
+export default Favourite;

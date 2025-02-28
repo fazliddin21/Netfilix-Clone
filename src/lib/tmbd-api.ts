@@ -76,3 +76,13 @@ export const getMovieTrlailer = async (type?: string, id?: number) => {
 
   }
 }
+
+
+export const getFavorites = async (uid?: string, accountId?: string) => {
+  try {
+    const { data } = await axios.get(`/api/favorite?uid=${uid}&accountId=${accountId}`)
+    return data && data.data
+  } catch (error) {
+
+  }
+}
