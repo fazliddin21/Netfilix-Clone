@@ -27,8 +27,6 @@ const MovieItem = ({ moviesRun }: Props) => {
   };
 
   const onAdd = async () => {
-    console.log("start");
-
     try {
       const { data } = await axios.post(
         "/api/favorite",
