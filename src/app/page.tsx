@@ -8,12 +8,10 @@ import { useEffect, useState } from "react";
 import Common from "@/components/components/navbar/commond";
 import {
   getDateMovies,
-  getFavorites,
   getPopulerMovies,
   getTopMovies,
 } from "@/lib/tmbd-api";
 import {
-  Favoritetype,
   MovieDataProps,
   MovieProps,
 } from "@/types/main";
@@ -25,7 +23,7 @@ const Home = () => {
 
   const { account, pageLoading, setPageLoading } =
     useGlobalContext();
-  const { data: session }: any = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const getAllMovoies = async () => {
@@ -37,7 +35,6 @@ const Home = () => {
           trendMovie,
           topMovie,
           populetMovie,
-          favorites,
         ] = await Promise.all([
           getDateMovies("tv"),
           getTopMovies("tv"),
@@ -45,51 +42,33 @@ const Home = () => {
           getDateMovies("movie"),
           getTopMovies("movie"),
           getPopulerMovies("movie"),
-          getFavorites(
-            session?.user?.uid,
-            account?._id
-          ),
         ]);
-        console.log(favorites);
-
-        const tvShows: MovieDataProps[] = [
+        const tvSHows: MovieDataProps[] = [
           {
             title: "Trend Tv Shows",
             data: trendTv,
           },
-          { title: "Top Tv Shows", data: topTv },
+          {
+            title: "Top Tv Shows",
+            data: topTv,
+          },
           {
             title: "Popular Tv Shows",
             data: populerTv,
           },
-        ].map((item, index) => ({
-          id: index.toString(),
-          title: item.title,
-          poster_path:
-            item.data.length > 0
-              ? item.data[0].poster_path
-              : null,
-          backdrop_path:
-            item.data.length > 0
-              ? item.data[0].backdrop_path
-              : null,
+        ].map((item) => ({
+          id: item.data[0]?.id ?? null, // ✅ id bor bo‘lsa, oladi; aks holda null
+          ...item,
           data: item.data.map(
             (movie: MovieProps) => ({
               ...movie,
               type: "tv",
-              addedToFavorites: favorites.length
-                ? favorites
-                    .map(
-                      (item: Favoritetype) =>
-                        item.movieId
-                    )
-                    .indexOf(movie.id)
-                : false,
+              addedToFavorites: false,
             })
           ),
         }));
 
-        const movieShows: MovieDataProps[] = [
+        const MovieSHows: MovieDataProps[] = [
           {
             title: "Trend Movies Shows",
             data: trendMovie,
@@ -100,38 +79,23 @@ const Home = () => {
           },
           {
             title: "Popular Movies Shows",
-            data: populetMovie,
-          }, // To'g'ri versiya
-        ].map((item, index) => ({
-          id: (index + tvShows.length).toString(), // Id sifatida string ishlatildi
-          title: item.title,
-          poster_path:
-            item.data.length > 0
-              ? item.data[0].poster_path
-              : null,
-          backdrop_path:
-            item.data.length > 0
-              ? item.data[0].backdrop_path
-              : null,
+            data: populetMovie, // ✅ Typo bor edi, uni to‘g‘riladik
+          },
+        ].map((item) => ({
+          id: item.data[0]?.id ?? null, // ✅ Agar `data` bo‘sh bo‘lsa, `null` bo‘ladi
+          ...item,
           data: item.data.map(
             (movie: MovieProps) => ({
               ...movie,
               type: "movie",
-              addedToFavorites: favorites.length
-                ? favorites
-                    .map(
-                      (item: Favoritetype) =>
-                        item.movieId
-                    )
-                    .indexOf(movie.id)
-                : false,
+              addedToFavorites: false,
             })
           ),
         }));
 
         const AllMovies = [
-          ...tvShows,
-          ...movieShows,
+          ...tvSHows,
+          ...MovieSHows,
         ];
         setMoviesData(AllMovies);
       } catch (error) {
@@ -141,7 +105,7 @@ const Home = () => {
     };
 
     getAllMovoies();
-  }, [session]);
+  }, []);
   if (session === null) return <Login />;
   if (pageLoading) {
     return <Loader />;

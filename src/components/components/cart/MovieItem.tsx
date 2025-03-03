@@ -1,11 +1,18 @@
 "use client";
-import { MovieProps } from "@/types/main";
-import React, { useState } from "react";
+import {
+  Favoritetype,
+  MovieProps,
+} from "@/types/main";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useState,
+} from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
-  CheckIcon,
   ChevronDown,
+  MinusIcon,
   PlusIcon,
 } from "lucide-react";
 import { useGlobalContext } from "@/context/context";
@@ -16,8 +23,16 @@ import { useSession } from "next-auth/react";
 
 interface Props {
   moviesRun: MovieProps;
+  mylist?: string;
+  setFavorite?: Dispatch<
+    SetStateAction<Favoritetype[]>
+  >;
 }
-const MovieItem = ({ moviesRun }: Props) => {
+const MovieItem = ({
+  moviesRun,
+  mylist = "",
+  setFavorite,
+}: Props) => {
   let { setMovie, setOpen, account } =
     useGlobalContext();
   const { data: session }: any = useSession();
@@ -37,9 +52,22 @@ const MovieItem = ({ moviesRun }: Props) => {
           poster_path: moviesRun?.poster_path,
           movieId: moviesRun.id,
           type: moviesRun.type,
+          title: moviesRun.title,
+          overview: moviesRun.overview,
         }
       );
-      console.log("API response:", data);
+      if (data?.success) {
+        return toast({
+          title: "Success",
+          description: "Movie added to favorites",
+        });
+      } else {
+        return toast({
+          variant: "destructive",
+          title: "Error",
+          description: data?.message,
+        });
+      }
     } catch (error) {
       return toast({
         variant: "destructive",
@@ -48,6 +76,35 @@ const MovieItem = ({ moviesRun }: Props) => {
           "Something went wrong, try again later",
       });
     }
+  };
+
+  const OnRemove = async () => {
+    try {
+      const { data } = await axios.delete(
+        `/api/favorite?id=${mylist}`
+      );
+      if (data?.success) {
+        if (setFavorite) {
+          setFavorite((prev: Favoritetype[]) =>
+            prev.filter(
+              (item: Favoritetype) =>
+                item._id !== mylist
+            )
+          );
+        }
+        return toast({
+          title: "Success",
+          description:
+            "Movie removed from favorites",
+        });
+      } else {
+        return toast({
+          variant: "destructive",
+          title: "Error",
+          description: data?.message,
+        });
+      }
+    } catch (error) {}
   };
 
   return (
@@ -74,11 +131,14 @@ const MovieItem = ({ moviesRun }: Props) => {
         />
         <div className="buttunWraper space-x-3 hidden absolute p-2 bottom-[20px]">
           <div className="cursor-pointer border flex w-{50px} items-center gap-x-2 rounded-full  text-sm font-semibold transition hover: border-white bg-black opacity-75 text-black">
-            {moviesRun.addedToFavorites ? (
-              <Button className="cursor-pointer border flex w-{50px} items-center gap-x-2 rounded-full  text-sm font-semibold transition hover: border-white bg-black opacity-75 text-black">
-                <CheckIcon
+            {mylist?.length ? (
+              <Button
+                className="cursor-pointer border flex w-{50px} items-center gap-x-2 rounded-full  text-sm font-semibold transition hover: border-white bg-black opacity-75 text-black"
+                onClick={OnRemove}
+              >
+                <MinusIcon
                   color="red"
-                  className="h-7 w-7"
+                  className="h-7 w-7 "
                 />
               </Button>
             ) : (

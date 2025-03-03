@@ -133,7 +133,10 @@ const MoviePopup = () => {
                     11, 12,
                   ].map((item) => {
                     return (
-                      <Skeleton className="w-full h-[150px]" />
+                      <Skeleton
+                        key={item}
+                        className="w-full h-[150px]"
+                      />
                     );
                   })}
                 </div>

@@ -45,9 +45,7 @@ export interface MenuItemType {
 }
 
 export interface MovieDataProps {
-  id: Key | null | undefined;
-  poster_path: string | null;
-  backdrop_path: string | null;
+  id: number | null;
   title: string;
   data: MovieProps[];
 }
@@ -124,4 +122,8 @@ export interface Favoritetype {
   poster_path: string,
   movieId: string,
   type: string
+  title: string,
+  overview: string,
+  _id: string
+
 }

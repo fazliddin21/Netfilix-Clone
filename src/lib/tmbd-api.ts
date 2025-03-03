@@ -1,5 +1,4 @@
 import axios from "axios";
-import { log } from "console";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const BASE_URL = process.env.NEXT_PUBLIC_TMDB_URL;
@@ -86,3 +85,16 @@ export const getFavorites = async (uid?: string, accountId?: string) => {
 
   }
 }
+
+
+export const getMyList = async (uid?: string, accountId?: string) => {
+  try {
+  
+
+    const { data } = await axios.get(`/api/favorite?uid=${uid}&accountId=${accountId}`);
+    return data;
+  } catch (error) {
+    console.error("API so‘rov xatosi:", error);
+    return null;
+  }
+};
