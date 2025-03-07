@@ -45,7 +45,7 @@ export interface MenuItemType {
 }
 
 export interface MovieDataProps {
-  id: number | null;
+
   title: string;
   data: MovieProps[];
 }
