@@ -1,4 +1,5 @@
 "use client";
+import { useGlobalContext } from "@/context/context";
 import { MovieProps } from "@/types/main";
 import {
   MoreHorizontalIcon,
@@ -27,10 +28,13 @@ const Banner = ({ movies }: Props) => {
       ];
     setRandomMovie(movie);
   }, [movies]);
-
+  let { setOpen, setMovie } = useGlobalContext();
   if (!movies || movies.length === 0)
     return <div>Loading...</div>; // movies bo‘sh bo‘lsa loading chiqadi
-
+  const onOpenPopup = () => {
+    setMovie(randomMovie);
+    setOpen(true);
+  };
   return (
     <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:justify-end lg:h-[65vh] lg:pb-12 lg:pl-24">
       <div className="absolute top-0 left-0 h-[95vh] w-full -z-10">
@@ -64,11 +68,17 @@ const Banner = ({ movies }: Props) => {
         </>
       )}
       <div className="flex space-x-3">
-        <button className="cursor-pointer flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl bg-white text-black">
+        <button
+          onClick={onOpenPopup}
+          className="cursor-pointer flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl bg-white text-black"
+        >
           <PlayCircle className="h-4 w-4 text-black md:h-7 md:w-7 cursor-pointer" />
           Play
         </button>
-        <button className="cursor-pointer flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl bg-[gray]/70">
+        <button
+          onClick={onOpenPopup}
+          className="cursor-pointer flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl bg-[gray]/70"
+        >
           <MoreHorizontalIcon className="h-5 w-5 md:h-8 md:w-8 cursor-pointer" />
           More Info
         </button>

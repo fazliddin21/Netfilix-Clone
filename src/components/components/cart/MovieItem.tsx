@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   ChevronDown,
+  Loader2,
   MinusIcon,
   PlusIcon,
 } from "lucide-react";
@@ -41,8 +42,12 @@ const MovieItem = ({
     setOpen(true);
   };
 
+  const [isLoading, setIsLoading] =
+    useState<boolean>(false);
+
   const onAdd = async () => {
     try {
+      setIsLoading(true);
       const { data } = await axios.post(
         "/api/favorite",
         {
@@ -75,11 +80,14 @@ const MovieItem = ({
         description:
           "Something went wrong, try again later",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const OnRemove = async () => {
     try {
+      setIsLoading(true);
       const { data } = await axios.delete(
         `/api/favorite?id=${mylist}`
       );
@@ -104,7 +112,10 @@ const MovieItem = ({
           description: data?.message,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -131,7 +142,12 @@ const MovieItem = ({
         />
         <div className="buttunWraper space-x-3 hidden absolute p-2 bottom-[20px]">
           <div className="cursor-pointer border flex w-{50px} items-center gap-x-2 rounded-full  text-sm font-semibold transition hover: border-white bg-black opacity-75 text-black">
-            {mylist?.length ? (
+            {isLoading ? (
+              <Loader2
+                className="h-7 w-7 animate-spin"
+                color="#fff"
+              />
+            ) : mylist?.length ? (
               <Button
                 className="cursor-pointer border flex w-{50px} items-center gap-x-2 rounded-full  text-sm font-semibold transition hover: border-white bg-black opacity-75 text-black"
                 onClick={OnRemove}

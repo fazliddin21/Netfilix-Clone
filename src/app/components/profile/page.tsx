@@ -39,7 +39,7 @@ const ProfileAcaunt = () => {
     useState<boolean>(true);
   let [curruntAcaunt, setCurruntAcaunt] =
     React.useState<AccountProps | null>(null);
-  // [------------------------------------------------------]
+
   const { data: session }: any = useSession();
 
   useEffect(() => {
@@ -142,7 +142,7 @@ const ProfileAcaunt = () => {
               <li
                 key={item._id}
                 onClick={() => {
-                  if (!isDelete) return;
+                  if (isDelete) return; // "Manage Profile" bosilmagan bo‘lsa, login qilish ishlaydi
                   setOpen(true);
                   setIsAuth("login");
                   setCurruntAcaunt(item);
@@ -159,17 +159,21 @@ const ProfileAcaunt = () => {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  {!isDelete ? (
+
+                  {/* Agar "Manage Profile" bosilgan bo‘lsa, o‘chirish tugmasi chiqadi */}
+                  {isDelete && (
                     <div
-                      onClick={() =>
-                        onDelete(item._id)
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation(); // Ota onClick ishlamasligi uchun
+                        onDelete(item._id);
+                      }}
                       className="absolute transform top-0 left-0 z-10 cursor-pointer"
                     >
                       <MdDelete className="w-8 h-8 text-red-600 hover:text-red-300" />
                     </div>
-                  ) : null}
+                  )}
                 </div>
+
                 <div className="flex items-center gap-2">
                   <span className="font-mono font-bold text-2xl">
                     {item.name}

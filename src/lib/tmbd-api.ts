@@ -89,12 +89,24 @@ export const getFavorites = async (uid?: string, accountId?: string) => {
 
 export const getMyList = async (uid?: string, accountId?: string) => {
   try {
-  
+
 
     const { data } = await axios.get(`/api/favorite?uid=${uid}&accountId=${accountId}`);
     return data;
   } catch (error) {
     console.error("API so‘rov xatosi:", error);
     return null;
+  }
+};
+
+
+export const getSearchResult = async (type: string, query: string) => {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/search/${type}?api_key=${API_KEY}&include_adult=false&language=en-US&query=${query}`
+    );
+    return data?.results;
+  } catch (error) {
+    console.log(error);
   }
 };
