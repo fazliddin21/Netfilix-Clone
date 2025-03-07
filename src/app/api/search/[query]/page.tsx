@@ -1,3 +1,4 @@
+"use client";
 import ProfileAcaunt from "@/app/components/profile/page";
 import Login from "@/components/components/auth/login";
 import Loader from "@/components/components/loading";
